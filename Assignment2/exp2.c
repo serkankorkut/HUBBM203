@@ -27,25 +27,24 @@ typedef struct
 {
     int size;
 
-    char** elements;
+    char **elements;
 
     int frontIndex;
-}queue;
+} queue;
 
 queue initQueue(void);
 
-void enqueue(queue* aQueue,char* string);
+void enqueue(queue *aQueue, char *string);
 
-char* dequeue(queue * aQueue);
+char *dequeue(queue *aQueue);
 
-void printQueue(queue *aQueue,char* filePath);
+void printQueue(queue *aQueue, char *filePath);
 
 int isHexDigit(char aChar);
 
-char* hexToInt(char * expression);
+char *hexToInt(char *expression);
 
-int hexHasError(char* expression, queue *q);
-
+int hexHasError(char *expression, queue *q);
 
 
 char ***linesToToken(char **lines, char *delims, int tokenNumber, int linesCount, int *lineChars);
@@ -56,14 +55,14 @@ stackInt initStackInt(void);
 
 int isOperator(char aChar);
 
-int hasError(char *expression, queue* q);
+int hasError(char *expression, queue *q);
 
 char popStackOperator(stackOperotor *a);
 
-char* hexCalculator(char* expression, queue *q);
+char *hexCalculator(char *expression, queue *q);
 
 
-char *intCalculator(char *expression,queue* q);
+char *intCalculator(char *expression, queue *q);
 
 void pushStackInt(stackInt *a, int value);
 
@@ -91,27 +90,24 @@ int main(int argc, char const *argv[])
     int lineCount = 0;
 
 
-      linesTokens = readAsTokens( argv[1], &maxCharCount,
-                             &lineCount, expectedMaxToken, " \"\n\r");
+    linesTokens = readAsTokens((char *) argv[1], &maxCharCount,
+                               &lineCount, expectedMaxToken, " \"\n\r");
 
- int i;
+    int i;
 
     queue q;
 
     q = initQueue();
 
 
-
-
-
-   for (i = 0; i <lineCount ; i++)
+    for (i = 0; i < lineCount; i++)
     {
-        if(strcmp(linesTokens[i][0],"calculate")==0)
+        if (strcmp(linesTokens[i][0], "calculate") == 0)
         {
-            if(strcmp(linesTokens[i][1],"integer")==0)
+            if (strcmp(linesTokens[i][1], "integer") == 0)
             {
-                char* dummy = intCalculator(linesTokens[i][2],&q);
-                if(strcmp(dummy,"error")==0)
+                char *dummy = intCalculator(linesTokens[i][2], &q);
+                if (strcmp(dummy, "error") == 0)
                 {
 
                 }
@@ -120,10 +116,15 @@ int main(int argc, char const *argv[])
 
                 }
             }
-            else if(strcmp(linesTokens[i][1],"hex")==0)
+            else if (strcmp(linesTokens[i][1], "hex") == 0)
             {
-                char* dummy = hexCalculator(linesTokens[i][2],&q);
-                if(strcmp(dummy,"error")==0)
+              /* CHANGED  */
+              /* DELETED if(strcmp(dummy,"error")==0) */
+                char *dummy = hexCalculator(linesTokens[i][2], &q);
+
+                /* DELETED  */
+                /*
+                if (strcmp(dummy, "error") == 0)
                 {
 
                 }
@@ -131,14 +132,18 @@ int main(int argc, char const *argv[])
                 {
 
                 }
+
+                */
+
+                /* END OF DELETION */
             }
             else
             {
             }
         }
-        else if(strcmp(linesTokens[i][0],"print")==0)
+        else if (strcmp(linesTokens[i][0], "print") == 0)
         {
-            printQueue(&q,(char*)argv[2]);
+            printQueue(&q, (char *) argv[2]);
         }
         else
         {
@@ -146,12 +151,6 @@ int main(int argc, char const *argv[])
         }
 
     }
-
-
-
-
-
-
 
 
     return 0;
@@ -185,7 +184,7 @@ int operatorPrecedence(char operator)
     }
     else
     {
-     /*   printf("Invalid operator %c in function operatorPresedence\n", operator); */
+        /*   printf("Invalid operator %c in function operatorPresedence\n", operator); */
         return -1;
     }
 }
@@ -382,10 +381,10 @@ char ***linesToToken(char **lines, char *delims, int tokenNumber, int linesCount
 
 }
 
-char *intCalculator(char *expression,queue* q)
+char *intCalculator(char *expression, queue *q)
 {
 
-    if (1 == hasError(expression,q))
+    if (1 == hasError(expression, q))
     {
         return "error";
     }
@@ -393,7 +392,7 @@ char *intCalculator(char *expression,queue* q)
 
     stackInt intStack = initStackInt();
     stackOperotor opStack = initStackOperator();
-    int shouldMultiply=0;
+    int shouldMultiply = 0;
     int res = 0;
 
     int expSize = strlen(expression);
@@ -407,12 +406,14 @@ char *intCalculator(char *expression,queue* q)
                 if (i > 0 && i < strlen(expression))
                 {
 
-                    if ( (expression[i] == '-' && isOperator(expression[i - 1]) != -1 &&
-                        isOperator(expression[i + 1]) == -1) || ((expression[i] == '-' &&
-                                                                  isOperator(expression[i + 1]) == 1)) || ((expression[i] == '-' &&
-                                                                                                            isOperator(expression[i - 1]) != -1))   || ((expression[i] == '-' &&
-                                                                                                                                                          expression[i+2] == '*')) || ((expression[i] == '-' &&
-                                                                                                                                                                                        expression[i+2] == '/'))  )
+                    if ((expression[i] == '-' && isOperator(expression[i - 1]) != -1 &&
+                         isOperator(expression[i + 1]) == -1) || ((expression[i] == '-' &&
+                                                                   isOperator(expression[i + 1]) == 1)) ||
+                        ((expression[i] == '-' &&
+                          isOperator(expression[i - 1]) != -1)) || ((expression[i] == '-' &&
+                                                                     expression[i + 2] == '*')) ||
+                        ((expression[i] == '-' &&
+                          expression[i + 2] == '/')))
                     {
                         /*int ajk = expression[i+1] -'0';
                          ajk = -ajk;
@@ -421,9 +422,9 @@ char *intCalculator(char *expression,queue* q)
 
                          */
 
-                        shouldMultiply++ ;
-                      if(isOperator(expression[i-1]) !=1)
-                       pushStackOperator(&opStack,'+');
+                        shouldMultiply++;
+                        if (isOperator(expression[i - 1]) != 1)
+                            pushStackOperator(&opStack, '+');
 
                     }
                     else
@@ -432,14 +433,16 @@ char *intCalculator(char *expression,queue* q)
                     }
                 }
 
-                if(i==0)
+                if (i == 0)
                 {
-                    if ( (expression[i] == '-' && isOperator(expression[i - 1]) != -1 &&
-                          isOperator(expression[i + 1]) == -1) || ((expression[i] == '-' &&
-                                                                    isOperator(expression[i + 1]) == 1)) || ((expression[i] == '-' &&
-                                                                                                              isOperator(expression[i - 1]) != -1))   || ((expression[i] == '-' &&
-                                                                                                                                                           expression[i+2] == '*')) || ((expression[i] == '-' &&
-                                                                                                                                                                                         expression[i+2] == '/'))  )
+                    if ((expression[i] == '-' && isOperator(expression[i - 1]) != -1 &&
+                         isOperator(expression[i + 1]) == -1) || ((expression[i] == '-' &&
+                                                                   isOperator(expression[i + 1]) == 1)) ||
+                        ((expression[i] == '-' &&
+                          isOperator(expression[i - 1]) != -1)) || ((expression[i] == '-' &&
+                                                                     expression[i + 2] == '*')) ||
+                        ((expression[i] == '-' &&
+                          expression[i + 2] == '/')))
                     {
                         /*int ajk = expression[i+1] -'0';
                          ajk = -ajk;
@@ -448,9 +451,9 @@ char *intCalculator(char *expression,queue* q)
 
                          */
 
-                        shouldMultiply++ ;
-                       if(isOperator(expression[i-1]) != 1)
-                            pushStackOperator(&opStack,'+');
+                        shouldMultiply++;
+                        if (isOperator(expression[i - 1]) != 1)
+                            pushStackOperator(&opStack, '+');
 
                     }
                     else
@@ -466,31 +469,104 @@ char *intCalculator(char *expression,queue* q)
             {
                 if (i > 0 && i < strlen(expression))
                 {
-                    if( (expression[i] == '-' && isOperator(expression[i - 1]) != -1 &&
+                    if ((expression[i] == '-' && isOperator(expression[i - 1]) != -1 &&
                          isOperator(expression[i + 1]) == -1) || ((expression[i] == '-' &&
-                                                                   isOperator(expression[i + 1]) == 1)) || ((expression[i] == '-' &&
-                                                                                                             isOperator(expression[i - 1]) != -1))   || ((expression[i] == '-' &&
-                                                                                                                                                          expression[i+2] == '*')) || ((expression[i] == '-' &&
-                                                                                                                                                                                        expression[i+2] == '/'))  )
+                                                                   isOperator(expression[i + 1]) == 1)) ||
+                        ((expression[i] == '-' &&
+                          isOperator(expression[i - 1]) != -1)) || ((expression[i] == '-' &&
+                                                                     expression[i + 2] == '*')) ||
+                        ((expression[i] == '-' &&
+                          expression[i + 2] == '/')))
                     {
 
 
                         shouldMultiply++;
-                       if(isOperator(expression[i-1]) !=1)
-                        pushStackOperator(&opStack,'+');
+                        if (isOperator(expression[i - 1]) != 1)
+                        {
+                            /*CHANGED  */
+                            /* ADDED */
+                            if (intStack.size > 0)
+                            {
+                                char op = popStackOperator(&opStack);
+
+                                int n1, n2;
+                                if (intStack.size >= 2)
+                                {
+                                    n1 = popStackInt(&intStack);
+                                    n2 = popStackInt(&intStack);
+
+                                    if (op == '*')
+                                    {
+                                        res = n1 * n2;
+                                    }
+                                    else if (op == '/')
+                                    {
+                                        res = n2 / n1;
+                                    }
+                                    else if (op == '+')
+                                    {
+                                        res = n1 + n2;
+                                    }
+                                    else if (op == '-')
+                                    {
+                                        res = n2 - n1;
+                                    }
+                                }
+                                else
+                                {
+                                    n1 = popStackInt(&intStack);
+
+                                    if (op == '-')
+                                    {
+                                        n1 = -n1;
+                                    }
+
+                                    res = n1;
+                                }
+
+                                /* END OF ADDING */
+
+
+
+
+
+                                /*  printf("n1 %d , n2 %d \n", n1, n2);
+
+                                  printf("There occured a more precedence so this inter result is %d\n", res); */
+
+
+                                /* CHANGED */
+
+                                /*DELETED  pushStackOperator(&opStack, expression[i]); */
+
+                                /* ADDED */
+                                pushStackOperator(&opStack, '+');
+
+                                pushStackInt(&intStack, res);
+
+                                /* END OF ADDING */
+
+
+
+
+                            }
+
+
+                        }
 
                     }
                     else
                     {
-                        if(intStack.size>0)
+                        if (intStack.size > 0)
                         {
                             char op = popStackOperator(&opStack);
 
                             int n1, n2;
-                            if(intStack.size>=2)
+                            if (intStack.size >= 2)
                             {
                                 n1 = popStackInt(&intStack);
                                 n2 = popStackInt(&intStack);
+
 
                                 if (op == '*')
                                 {
@@ -508,14 +584,15 @@ char *intCalculator(char *expression,queue* q)
                                 {
                                     res = n2 - n1;
                                 }
+
                             }
                             else
                             {
-                                n1=popStackInt(&intStack);
+                                n1 = popStackInt(&intStack);
 
-                                if(op == '-')
+                                if (op == '-')
                                 {
-                                    n1=-n1;
+                                    n1 = -n1;
                                 }
 
                                 res = n1;
@@ -528,7 +605,7 @@ char *intCalculator(char *expression,queue* q)
 
                             /*  printf("n1 %d , n2 %d \n", n1, n2);
 
-                              printf("There occured a more precedence so this inter result is %d\n", res); */
+                               printf("There occured a more precedence so this inter result is %d\n", res); */
 
 
 
@@ -540,50 +617,47 @@ char *intCalculator(char *expression,queue* q)
 
                         }
 
+
+                        if (intStack.size > 1 && i == 0)
+                        {
+                            char op = popStackOperator(&opStack);
+
+                            int n1, n2;
+
+                            n1 = popStackInt(&intStack);
+                            n2 = popStackInt(&intStack);
+
+
+                            if (op == '*')
+                            {
+                                res = n1 * n2;
+                            }
+                            else if (op == '/')
+                            {
+                                res = n2 / n1;
+                            }
+                            else if (op == '+')
+                            {
+                                res = n1 + n2;
+                            }
+                            else if (op == '-')
+                            {
+                                res = n2 - n1;
+                            }
+
+
+                            /*   printf("n1 %d , n2 %d \n", n1, n2);
+
+                               printf("There occured a more precedence so this inter result is %d\n", res); */
+
+                            pushStackOperator(&opStack, expression[i]);
+
+                            pushStackInt(&intStack, res);
+
+                        }
+
                     }
                 }
-
-
-
-                if(intStack.size>1 && i==0)
-                {
-                    char op = popStackOperator(&opStack);
-
-                    int n1, n2;
-
-                    n1 = popStackInt(&intStack);
-                    n2 = popStackInt(&intStack);
-
-
-
-                    if (op == '*')
-                    {
-                        res = n1 * n2;
-                    }
-                    else if (op == '/')
-                    {
-                        res = n2 / n1;
-                    }
-                    else if (op == '+')
-                    {
-                        res = n1 + n2;
-                    }
-                    else if (op == '-')
-                    {
-                        res = n2 - n1;
-                    }
-
-
-                 /*   printf("n1 %d , n2 %d \n", n1, n2);
-
-                    printf("There occured a more precedence so this inter result is %d\n", res); */
-
-                    pushStackOperator(&opStack, expression[i]);
-
-                    pushStackInt(&intStack, res);
-
-                }
-
             }
         }
         else if (isOperator(expression[i]) == -1)
@@ -596,17 +670,17 @@ char *intCalculator(char *expression,queue* q)
                 i++;
             }
 
-            int num ;
+            int num;
             if (i == startIndex)
             {
-                num =   expression[i] - '0';
-                if(shouldMultiply % 2 ==1)
+                num = expression[i] - '0';
+                if (shouldMultiply % 2 == 1)
                 {
                     num = -num;
-                    shouldMultiply=0;
+                    shouldMultiply = 0;
                 }
 
-                pushStackInt(&intStack,num);
+                pushStackInt(&intStack, num);
             }
             else
             {
@@ -620,12 +694,12 @@ char *intCalculator(char *expression,queue* q)
 
                 num = atoi(charNumber);
 
-                if(shouldMultiply % 2 == 1)
+                if (shouldMultiply % 2 == 1)
                 {
                     num = -num;
-                    shouldMultiply=0;
+                    shouldMultiply = 0;
                 }
-                pushStackInt(&intStack,num );
+                pushStackInt(&intStack, num);
 
                 /* free(charNumber); */
 
@@ -644,14 +718,14 @@ char *intCalculator(char *expression,queue* q)
         {
             int k = i;
 
-    /*TODO */
+            /*TODO */
             while (topStackOperator(opStack) != '(')
             {
                 if (isOperator(expression[k] == 1))
                 {
 
                     int res = 0;
-                    char op='k';
+                    char op = 'k';
 
                     if (opStack.size > 0)
                         op = popStackOperator(&opStack);
@@ -664,7 +738,6 @@ char *intCalculator(char *expression,queue* q)
 
                     if (intStack.size > 0)
                         n2 = popStackInt(&intStack);
-
 
 
                     if (op == '*')
@@ -684,7 +757,7 @@ char *intCalculator(char *expression,queue* q)
                         res = n2 - n1;
                     }
 
-                /*   pushStackOperator(&opStack, expression[k]); */
+                    /*   pushStackOperator(&opStack, expression[k]); */
 
                     pushStackInt(&intStack, res);
 
@@ -727,9 +800,9 @@ char *intCalculator(char *expression,queue* q)
 
 
             n1 = popStackInt(&intStack);
-            if(intStack.size==0)
+            if (intStack.size == 0)
             {
-                pushStackInt(&intStack,n1);
+                pushStackInt(&intStack, n1);
             }
             else
             {
@@ -754,7 +827,7 @@ char *intCalculator(char *expression,queue* q)
                 }
                 else
                 {
-                  /*  printf("Invalid operator in calculation, and the invalid thing is %c \n", op); */
+                    /*  printf("Invalid operator in calculation, and the invalid thing is %c \n", op); */
                 }
 
                 /*   printf("Res : n1 %d , n2 %d \n", n1, n2);
@@ -775,13 +848,13 @@ char *intCalculator(char *expression,queue* q)
     }
 
 
-  /*  printf("Result is %d , size of stack int is %d\n", topStackInt(intStack), intStack.size);
+    /*  printf("Result is %d , size of stack int is %d\n", topStackInt(intStack), intStack.size);
 
-    for (i = 0; i < intStack.size; i++)
-    {
-        printf("Value %dth is %d\n", i, intStack.values[i]);
-    }
-*/
+      for (i = 0; i < intStack.size; i++)
+      {
+          printf("Value %dth is %d\n", i, intStack.values[i]);
+      }
+  */
 
     int retSize = 0;
     int retVal = popStackInt(&intStack);
@@ -798,18 +871,18 @@ char *intCalculator(char *expression,queue* q)
 
     sprintf(retChars, "%d", retVal);
 
- /*   printf("The things are %s \n", retChars);
+    /*   printf("The things are %s \n", retChars);
 
 
-    printf("ret size is %d\n", retSize); */
+       printf("ret size is %d\n", retSize); */
 
     char *dull = (char *) calloc(retSize + 10, sizeof(char));
 
-    strcpy(dull,"integer ");
+    strcpy(dull, "integer ");
 
-    strcat(dull,retChars);
+    strcat(dull, retChars);
 
-    enqueue(q,dull);
+    enqueue(q, dull);
 
     return retChars;
 
@@ -828,7 +901,7 @@ int isOperator(char aChar)
     }
     else if (aChar == '+' || aChar == '-' || aChar == '/' || aChar == '*')
         return 1;
-    else if(aChar>=48 && aChar <=57)
+    else if (aChar >= 48 && aChar <= 57)
     {
         return -1;
     }
@@ -947,9 +1020,9 @@ char topStackOperator(stackOperotor a)
 
 }
 
-int hasError(char *expression, queue* q)
+int hasError(char *expression, queue *q)
 {
-    if(strcmp("",expression)==0)
+    if (strcmp("", expression) == 0)
         return 1;
     int i;
     int leftPar = 0;
@@ -959,12 +1032,12 @@ int hasError(char *expression, queue* q)
 
     for (i = 0; i < strlen(expression); i++)
     {
-       /* int a = isOperator(expression[i]); */
+        /* int a = isOperator(expression[i]); */
 
         if (isOperator(expression[i]) == -2)
         {
-            hasError=1;
-            enqueue(q,"error");
+            hasError = 1;
+            enqueue(q, "error");
             return hasError;
         }
 
@@ -986,7 +1059,7 @@ int hasError(char *expression, queue* q)
     if (rightPar != leftPar)
     {
         hasError = 1;
-        enqueue(q,"error");
+        enqueue(q, "error");
         return hasError;
     }
 
@@ -994,23 +1067,25 @@ int hasError(char *expression, queue* q)
     {
         if (isOperator(expression[i]) == 1)
         {
-            if ( (isOperator(expression[i + 1]) == 1 && isOperator(expression[i + 2]) == 1)  )
+            if ((isOperator(expression[i + 1]) == 1 && isOperator(expression[i + 2]) == 1))
             {
-                enqueue(q,"error");
+                enqueue(q, "error");
                 hasError = 1;
 
                 return hasError;
             }
-            else if((expression[i] =='-' || expression[i] == '+' ) && (expression[i+1] == '*' || expression[i+1] == '/'  ) )
+            else if ((expression[i] == '-' || expression[i] == '+') &&
+                     (expression[i + 1] == '*' || expression[i + 1] == '/'))
             {
                 hasError = 1;
-                enqueue(q,"error");
+                enqueue(q, "error");
                 return hasError;
             }
-            else if( (expression[i] == '*' || expression[i] == '/') && (expression[i+1] =='*' || expression[i+1]=='/') )
+            else if ((expression[i] == '*' || expression[i] == '/') &&
+                     (expression[i + 1] == '*' || expression[i + 1] == '/'))
             {
                 hasError = 1;
-                enqueue(q,"error");
+                enqueue(q, "error");
                 return hasError;
             }
         }
@@ -1024,7 +1099,7 @@ int hasError(char *expression, queue* q)
 
 int isDigit(char aChar)
 {
-    if(aChar>=48 || aChar <=57)
+    if (aChar >= 48 || aChar <= 57)
     {
         return 1;
     }
@@ -1035,61 +1110,72 @@ queue initQueue(void)
 {
     queue aQueue;
 
-    aQueue.size=0;
+    aQueue.size = 0;
 
-    aQueue.elements=NULL;
+    aQueue.elements = NULL;
 
-    aQueue.frontIndex=0;
+    aQueue.frontIndex = 0;
 
 
-    return  aQueue;
-
+    return aQueue;
 
 
 }
 
-void enqueue(queue* aQueue,char* string)
+void enqueue(queue *aQueue, char *string)
 {
 
-    aQueue->elements = (char**)realloc((aQueue->elements),(aQueue->size+1) * sizeof(char*) );
+    aQueue->elements = (char **) realloc((aQueue->elements), (aQueue->size + 1) * sizeof(char *));
 
-   /* int i=0; */
-
-
-        aQueue->elements[aQueue->size] = (char*)calloc( ((int)strlen(string) +1 ) , sizeof(char))    ;
+    /* int i=0; */
 
 
-    strcpy(aQueue->elements[aQueue->size],string);
+    aQueue->elements[aQueue->size] = (char *) calloc(((int) strlen(string) + 1), sizeof(char));
 
-  /* aQueue->elements[(int)strlen(string)+1] = '\0'; */
+
+    strcpy(aQueue->elements[aQueue->size], string);
+
+    /* aQueue->elements[(int)strlen(string)+1] = '\0'; */
 
     aQueue->size++;
 
 }
 
-char* dequeue(queue * aQueue)
+char *dequeue(queue *aQueue)
 {
-    if(aQueue->frontIndex==aQueue->size || aQueue->size==0 )
+    if (aQueue->frontIndex == aQueue->size || aQueue->size == 0)
     {
-        return "er";
+        /* CHANGED */
+        /* DELETED return "er"; */
+
+        /* ADDED */
+
+        return NULL;
+
+        /* END OF ADDING */
+
     }
     else
     {
-        aQueue->size--;
+
+        /* DELETED   aQueue->size--; */
         aQueue->frontIndex++;
-        return aQueue->elements[aQueue->frontIndex-1];
+        return aQueue->elements[aQueue->frontIndex - 1];
     }
 
 
 }
 
-void printQueue(queue *aQueue,char* filePath)
+void printQueue(queue *aQueue, char *filePath)
 {
     FILE *fp;
-    fp=fopen(filePath,"a+");
-    char * dummy;
-    while( ( dummy=dequeue(aQueue) ) != NULL)
+    fp = fopen(filePath, "a+");
+    char *dummy;
+    while ((dummy = dequeue(aQueue)) != NULL)
     {
+        /* CHANGED */
+        /*DELETED */
+        /*
         if(strcmp(dummy,"er"))
         {
             fprintf(fp,"error\n");
@@ -1100,6 +1186,13 @@ void printQueue(queue *aQueue,char* filePath)
             fprintf(fp,"%s\n",dummy);
 
         }
+         */
+
+         /* END OF DELETION */
+
+        /* ADDED */
+        fprintf(fp, "%s\n", dummy);
+        /* END OF ADDING */
     }
 
     *aQueue = initQueue();
@@ -1108,43 +1201,42 @@ void printQueue(queue *aQueue,char* filePath)
 
 }
 
-char* hexToInt(char * expression)
+char *hexToInt(char *expression)
 {
-    queue q =initQueue() ;
-    int oldSize=0;
-    int newSize=0;
+    queue q = initQueue();
+    int oldSize = 0;
+    int newSize = 0;
     int i;
-    int digits=0;
-    int sign=0;
-    int decimal=0;
-    int counter=0;
+    int digits = 0;
+    int sign = 0;
+    int decimal = 0;
+    int counter = 0;
 
-        int difference = 0;
-    int j=0;
+    int difference = 0;
+    int j = 0;
 
-    char * retChar = (char*)calloc(strlen(expression) + 100, sizeof(char));
-    int k=0;
-    for(i = 0 ; i < strlen(expression) ; i++)
+    char *retChar = (char *) calloc(strlen(expression) + 100, sizeof(char));
+    int k = 0;
+    for (i = 0; i < strlen(expression); i++)
     {
-        char *dullDecimal = (char*)calloc(strlen(expression) + 1, sizeof(char));
+        char *dullDecimal = (char *) calloc(strlen(expression) + 1, sizeof(char));
 
 
-
-        if(isHexDigit(expression[i]) == -1)
+        if (isHexDigit(expression[i]) == -1)
         {
-            while(isHexDigit(expression[i]) == -1 )
+            while (isHexDigit(expression[i]) == -1)
             {
                 retChar[k] = expression[i];
                 k++;
                 counter++;
                 i++;
             }
-                i--;
+            i--;
         }
         else
         {
 
-            while(isHexDigit(expression[i]) == 1 && i < strlen(expression))
+            while (isHexDigit(expression[i]) == 1 && i < strlen(expression))
             {
 
 
@@ -1157,45 +1249,41 @@ char* hexToInt(char * expression)
             }
 
 
-
-            if(sign == 1)
+            if (sign == 1)
             {
-                oldSize=digits;
+                oldSize = digits;
 
-                for(j = 0; j< oldSize ; j++ )
+                for (j = 0; j < oldSize; j++)
                 {
-                    if(dullDecimal[j] == 'a' || dullDecimal[j] =='A')
+                    if (dullDecimal[j] == 'a' || dullDecimal[j] == 'A')
                     {
-                        decimal = decimal + 10 * pow(16,digits-j -1);
+                        decimal = decimal + 10 * pow(16, digits - j - 1);
                     }
-                    else if(dullDecimal[j] == 'b' || dullDecimal[j] =='B')
+                    else if (dullDecimal[j] == 'b' || dullDecimal[j] == 'B')
                     {
-                        decimal = decimal + 11 * pow(16,digits-j -1);
+                        decimal = decimal + 11 * pow(16, digits - j - 1);
                     }
-                    else if(dullDecimal[j] == 'C' || dullDecimal[j] =='c')
+                    else if (dullDecimal[j] == 'C' || dullDecimal[j] == 'c')
                     {
-                        decimal = decimal + 12 * pow(16,digits-j -1);
+                        decimal = decimal + 12 * pow(16, digits - j - 1);
                     }
-                    else if(dullDecimal[j] == 'd' || dullDecimal[j] =='D')
+                    else if (dullDecimal[j] == 'd' || dullDecimal[j] == 'D')
                     {
-                        decimal = decimal + 13 * pow(16,digits-j -1);
+                        decimal = decimal + 13 * pow(16, digits - j - 1);
                     }
-                    else if(dullDecimal[j] == 'e' || dullDecimal[j] =='E')
+                    else if (dullDecimal[j] == 'e' || dullDecimal[j] == 'E')
                     {
-                        decimal = decimal + 14* pow(16,digits-j -1);
+                        decimal = decimal + 14 * pow(16, digits - j - 1);
                     }
-                    else if(dullDecimal[j] == 'f' || dullDecimal[j] =='F')
+                    else if (dullDecimal[j] == 'f' || dullDecimal[j] == 'F')
                     {
-                        decimal = decimal + 15* pow(16,digits-j -1);
+                        decimal = decimal + 15 * pow(16, digits - j - 1);
                     }
                     else
                     {
                         int anInt = dullDecimal[j] - '0';
-                        decimal = decimal +  anInt * pow(16 ,digits -j -1);
+                        decimal = decimal + anInt * pow(16, digits - j - 1);
                     }
-
-
-
 
 
                 }
@@ -1211,36 +1299,31 @@ char* hexToInt(char * expression)
 
                 sign = 0;
 
-                char *stringDec = (char *) calloc(newSize , sizeof(char));
+                char *stringDec = (char *) calloc(newSize, sizeof(char));
 
                 sprintf(stringDec, "%d", decimal);
 
 
-
-                int m =0;
-                for(m=0; m < newSize ; m++)
+                int m = 0;
+                for (m = 0; m < newSize; m++)
                 {
                     retChar[k] = stringDec[m];
                     k++;
                 }
 
 
-
-
-
-
                 newSize = 0;
 
-                oldSize =0;
+                oldSize = 0;
 
                 decimal = 0;
                 dullDecimal = NULL;
 
-                i = i -1 ;
+                i = i - 1;
 
                 digits = 0;
 
-                counter=0;
+                counter = 0;
 
 
             }
@@ -1248,42 +1331,36 @@ char* hexToInt(char * expression)
         }
 
 
-
-
-
-
-
     }
 
 
-
-
-    strcpy(retChar, intCalculator(retChar,&q));
+    strcpy(retChar, intCalculator(retChar, &q));
 
     int result = atoi(retChar);
 
-    if(result<0)
+    if (result < 0)
     {
         result = -result;
         sprintf(retChar, "%x", result);
 
-        char* minusSign = (char*)calloc(strlen(retChar+2), sizeof(char));
-        strcpy(minusSign,"-");
-        strcat(minusSign,retChar);
+        char *minusSign = (char *) calloc(strlen(retChar + 2), sizeof(char));
+        strcpy(minusSign, "-");
+        strcat(minusSign, retChar);
 
-        strcpy(retChar,minusSign);
+        strcpy(retChar, minusSign);
     }
     else
-    {        sprintf(retChar, "%x", result);
+    {
+        sprintf(retChar, "%x", result);
 
 
     }
 
-    for(i = 0; i < strlen(retChar) ; i++ )
+    for (i = 0; i < strlen(retChar); i++)
     {
-        if(retChar[i] >=97 && retChar[i] <=102)
+        if (retChar[i] >= 97 && retChar[i] <= 102)
         {
-            retChar[i] =retChar[i]-32;
+            retChar[i] = retChar[i] - 32;
         }
     }
 
@@ -1292,12 +1369,10 @@ char* hexToInt(char * expression)
 }
 
 
-
-
 int isHexDigit(char aChar)
 {
     /*ASCII table values for 0 to 9 A to F and  */
-    if( (aChar>=48 && aChar <=57) || (aChar>=65 && aChar <= 70  ) || (aChar>=97 && aChar<=102) )
+    if ((aChar >= 48 && aChar <= 57) || (aChar >= 65 && aChar <= 70) || (aChar >= 97 && aChar <= 102))
     {
         return 1;
     }
@@ -1306,10 +1381,21 @@ int isHexDigit(char aChar)
 }
 
 
-int hexHasError(char* expression, queue *q)
+int hexHasError(char *expression, queue *q)
 {
-    if(strcmp("",expression)==0)
+    if (strcmp("", expression) == 0)
+    {
+        /* CHANGED */
+        /* DELETED return "error"; */
+        /* ADDED */
+
+        enqueue(q, "error");
+
+        /* END OF ADDING */
+
         return 1;
+    }
+
     int i;
     int leftPar = 0;
     int rightPar = 0;
@@ -1320,10 +1406,11 @@ int hexHasError(char* expression, queue *q)
     {
         /* int a = isOperator(expression[i]); */
 
-        if (isHexDigit(expression[i]) != 1 && isOperator(expression[i]) !=3 && isOperator(expression[i]) !=2 && isOperator(expression[i]) !=1)
+        if (isHexDigit(expression[i]) != 1 && isOperator(expression[i]) != 3 && isOperator(expression[i]) != 2 &&
+            isOperator(expression[i]) != 1)
         {
-            hasError=1;
-            enqueue(q,"error");
+            hasError = 1;
+            enqueue(q, "error");
             return hasError;
         }
 
@@ -1345,7 +1432,7 @@ int hexHasError(char* expression, queue *q)
     if (rightPar != leftPar)
     {
         hasError = 1;
-        enqueue(q,"error");
+        enqueue(q, "error");
         return hasError;
     }
 
@@ -1353,23 +1440,25 @@ int hexHasError(char* expression, queue *q)
     {
         if (isOperator(expression[i]) == 1)
         {
-            if ( (isOperator(expression[i + 1]) == 1 && isOperator(expression[i + 2]) == 1)  )
+            if ((isOperator(expression[i + 1]) == 1 && isOperator(expression[i + 2]) == 1))
             {
-                enqueue(q,"error");
+                enqueue(q, "error");
                 hasError = 1;
 
                 return hasError;
             }
-            else if((expression[i] =='-' || expression[i] == '+' ) && (expression[i+1] == '*' || expression[i+1] == '/'  ) )
+            else if ((expression[i] == '-' || expression[i] == '+') &&
+                     (expression[i + 1] == '*' || expression[i + 1] == '/'))
             {
                 hasError = 1;
-                enqueue(q,"error");
+                enqueue(q, "error");
                 return hasError;
             }
-            else if( (expression[i] == '*' || expression[i] == '/') && (expression[i+1] =='*' || expression[i+1]=='/') )
+            else if ((expression[i] == '*' || expression[i] == '/') &&
+                     (expression[i + 1] == '*' || expression[i + 1] == '/'))
             {
                 hasError = 1;
-                enqueue(q,"error");
+                enqueue(q, "error");
                 return hasError;
             }
         }
@@ -1381,25 +1470,29 @@ int hexHasError(char* expression, queue *q)
 
 }
 
-char* hexCalculator(char* expression, queue *q)
+char *hexCalculator(char *expression, queue *q)
 {
 
 
-    if (hexHasError(expression,q))
+    if (hexHasError(expression, q))
     {
-        return "error";
+        /* CHANGED */
+        /* DELETED return "error"; */
+
+        /* ADDED */
+        return NULL;
+        /* END OF ADDING */
     }
 
-    char* retVal = (char*)calloc(strlen(expression) + 1, sizeof(char));
+    char *retVal = (char *) calloc(strlen(expression) + 1, sizeof(char));
 
     char *dull = (char *) calloc(strlen(expression) + 10, sizeof(char));
 
-    strcpy(dull,"hex ");
+    strcpy(dull, "hex ");
 
-    strcat(dull,hexToInt(expression));
+    strcat(dull, hexToInt(expression));
 
-    enqueue(q,dull);
-
+    enqueue(q, dull);
 
 
     return retVal;
