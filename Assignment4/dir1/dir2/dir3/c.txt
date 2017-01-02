@@ -1,0 +1,12 @@
+We investigate a human-machine collaborative drawing environment in which an
+autonomous agent sketches images while optionally allowing a user to directly
+influence the agent trajectory. We combine Monte Carlo Tree Search with image
+classifiers and test both shallow models (multinomial logistic regression) and
+deep Convolutional Neural Networks. We found that
+using the shallow model, the agent produces a limited variety of images, which
+are noticably recogonisable by humans. However,				 using the deeper models, the
+agent produces a more diverse range of images, and while the agent remains
+very confident in having achieved its objective, to humans they mostly
+resemble unrecognisable random noise. We relate this to recent research which
+also discovered that deep neural networks are easily fooled and we discuss
+possible solutions and future directions for the research.
